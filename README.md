@@ -30,7 +30,7 @@ LinkUp is a professional networking platform designed to bridge the gap between 
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/linkup.git
+git clone https://github.com/Chirag1724/LinkUp.git
 
 # Navigate to project directory
 cd linkup
@@ -39,7 +39,7 @@ cd linkup
 npm install
 
 # Start development server
-npm start
+npm run dev
 ```
 
 The application will be available at `http://localhost:3000`
