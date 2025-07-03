@@ -1,10 +1,9 @@
-
 import React from "react";
 import Navbar from "../Components/Navbar";
 import Sidebar from "../Components/Sidebar";
 import Feed from "../Components/Feed";
 import Trending from "../Components/Trending";
-import Footer from "../components/Footer";
+
 
 const LandingPage = () => {
   return (
@@ -30,7 +29,7 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
-      <Footer/>
+      
     </div>
   );
 };

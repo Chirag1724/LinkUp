@@ -121,16 +121,7 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <li className="hover:bg-slate-600 transition-colors">
-                    <Link to="/signup" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 font-medium">
-                      Sign Up
-                    </Link>
-                  </li>
-                  <li className="hover:bg-slate-600 transition-colors">
-                    <Link to="/login" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 font-medium">
-                      Login
-                    </Link>
-                  </li>
+
                 </>
               )}
             </ul>

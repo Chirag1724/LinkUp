@@ -19,8 +19,8 @@ const Sidebar = () => {
           
           {/* Profile info */}
           <div className="mt-14 text-center">
-            <h2 className="font-bold text-lg text-[#1e293b]">Arpit Joshi</h2>
-            <p className="text-sm text-gray-500">Full Stack Developer | MERN Stack</p>
+            <h2 className="font-bold text-lg text-[#1e293b]">Chirag Dwivedi</h2>
+            <p className="text-sm text-gray-500">Front End Developer | MERN Stack</p>
           </div>
           
           {/* Profile stats */}
