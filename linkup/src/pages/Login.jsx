@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Github, CheckCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, ArrowRight, Github } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -8,43 +9,37 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
 
-  // Static credentials
-  const VALID_EMAIL = "chirag.dwivedi@gmail.com";
-  const VALID_PASSWORD = "Chirag123";
+  const handleLogin = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+  setError("");
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
-    
-    // Simulate API call delay
-    setTimeout(() => {
-      // Trim whitespace and compare case-insensitively for email
-      const trimmedEmail = email.trim().toLowerCase();
-      const trimmedPassword = password.trim();
-      
-      if (trimmedEmail === VALID_EMAIL.toLowerCase() && trimmedPassword === VALID_PASSWORD) {
-        // Show success animation
-        setShowSuccess(true);
-        setIsLoading(false);
-        
-        // Hide success animation and redirect after 2 seconds
-        setTimeout(() => {
-          setShowSuccess(false);
-          navigate("/person");
-        }, 2000);
-      } else {
-        setError("Invalid credentials. Please check your email and password.");
-        setIsLoading(false);
-      }
-    }, 1000);
-  };
+  try {
+    const { data } = await axios.post("http://localhost:5000/api/auth/login", {
+      email,
+      password,
+    });
+
+    if (data.success) {
+      localStorage.setItem("user", JSON.stringify(data.user));
+      navigate("/person"); 
+    } else {
+      setError(data.message || "Login failed.");
+    }
+  } catch (error) {
+    console.error("Login Error:", error);
+    // You can check error.response?.data?.message for more detailed error if needed
+    setError("Invalid credentials. Please check your email and password.");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const handleForgotPassword = () => {
-    console.log("Navigating to forgot password page");
+    navigate("/forgot-password");
   };
 
   const handleSignUp = () => {
@@ -53,14 +48,17 @@ const Login = () => {
 
   const handleGoogleLogin = () => {
     console.log("Google login initiated");
+    // Add your Google OAuth logic here
   };
 
   const handleTwitterLogin = () => {
     console.log("Twitter login initiated");
+    // Add your Twitter OAuth logic here
   };
 
   const handleGithubLogin = () => {
     console.log("GitHub login initiated");
+    // Add your GitHub OAuth logic here
   };
 
   return (
@@ -71,22 +69,6 @@ const Login = () => {
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-400 rounded-full opacity-20 blur-3xl"></div>
       </div>
       
-      {/* Success Animation Overlay */}
-      {showSuccess && (
-        <div className="fixed inset-0 bg-opacity-50 backdrop-blur-xs flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 text-center shadow-2xl">
-            <div className="flex justify-center mb-4">
-              <CheckCircle className="w-16 h-16 text-green-500 animate-bounce" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Login Successful!</h2>
-            <p className="text-gray-600">Welcome back to LinkUp</p>
-            <div className="mt-4 flex justify-center">
-              <div className="w-8 h-8 border-4 border-purple-300 border-t-purple-600 rounded-full animate-spin"></div>
-            </div>
-          </div>
-        </div>
-      )}
-      
       <div className="relative w-full max-w-md">
         {/* Login Card */}
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-purple-200 overflow-hidden">
@@ -94,10 +76,10 @@ const Login = () => {
           <div className="bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800 px-8 py-6">
             <div className="text-center">
               <div className="flex items-center justify-center gap-3 mb-2">
-                {/* Logo */}
+                {/* Logo Placeholder - Replace with your actual logo */}
                 <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-                  <img src="./logo.jpg" alt="LinkUp Logo" className="w-8 h-8 object-contain" />
-                </div>
+                    <img src="./logo.jpg" alt="My Logo" className="w-8 h-8 object-contain"/>
+                  </div>
                 <h1 className="text-3xl font-bold text-white">LinkUp</h1>
               </div>
               <p className="text-purple-100 text-sm">Welcome back to your alumni network</p>
@@ -113,8 +95,6 @@ const Login = () => {
                   {error}
                 </div>
               )}
-              
-
               
               {/* Email Field */}
               <div className="space-y-2">
@@ -174,7 +154,7 @@ const Login = () => {
               
               {/* Login Button */}
               <button
-                type="button"
+                type="submit"
                 disabled={isLoading}
                 onClick={handleLogin}
                 className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-3 rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-200 font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed group"

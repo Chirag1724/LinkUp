@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import { Eye, EyeOff, Mail, Lock, User, Calendar, Building, Briefcase, Linkedin, ArrowRight, Shield, CheckCircle } from "lucide-react";
 
 const Signup = () => {
@@ -18,36 +19,39 @@ const Signup = () => {
   const [error, setError] = useState("");
 
   const handleRegister = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
-    
-    if (password !== confirmPassword) {
-      setError("Passwords do not match!");
-      setIsLoading(false);
-      return;
-    }
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      console.log("Form submitted:", {
-        fullName, gradYear, department, status, email, password,
-        company: status === "Alumni" ? company : "",
-        jobTitle: status === "Alumni" ? jobTitle : "",
-        linkedin: status === "Alumni" ? linkedin : "",
-      });
-      
-      // Success - in real app, navigate to dashboard or verification page
-      alert("Account created successfully! Please check your email to verify your account.");
-    } catch (error) {
-      console.error("Signup Error:", error);
-      setError("Signup failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  e.preventDefault();
+  setIsLoading(true);
+  setError("");
+
+  if (password !== confirmPassword) {
+    setError("Passwords do not match!");
+    setIsLoading(false);
+    return;
+  }
+
+  try {
+    const res = await axios.post("http://localhost:5000/api/auth/signup", {
+      name: fullName,
+      email,
+      password,
+      status,
+      gradYear,
+      department,
+      company: status === "Alumni" ? company : "",
+      jobTitle: status === "Alumni" ? jobTitle : "",
+      linkedin: status === "Alumni" ? linkedin : "",
+    });
+
+    alert("Account created successfully! Please login.");
+    window.location.href = "/login";
+  } catch (err) {
+    console.error("Signup Error:", err);
+    setError(err.response?.data?.error || "Signup failed. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-purple-100 to-purple-200 flex items-center justify-center p-4">
@@ -97,7 +101,7 @@ const Signup = () => {
           </div>
           
           {/* Form */}
-          <div className="px-8 py-8">
+          <form onSubmit={handleRegister} className="px-8 py-8">
             <div className="space-y-6">
               {/* Error Message */}
               {error && (
@@ -368,7 +372,7 @@ const Signup = () => {
                 </a>
               </p>
             </div>
-          </div>
+          </form>
         </div>
         
         {/* Trust indicators */}
