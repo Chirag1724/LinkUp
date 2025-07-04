@@ -1,10 +1,20 @@
-
-import { useState } from "react";
-import { FaThumbsUp, FaCommentDots, FaPaperPlane, FaUser, FaCode, FaBookOpen } from "react-icons/fa";
+import { useState, useEffect, useRef } from "react";
+import { 
+  ThumbsUp, 
+  MessageCircle, 
+  Send, 
+  User, 
+  Code, 
+  BookOpen, 
+  Rocket, 
+  Trophy, 
+  Users, 
+  Filter, 
+  Search,
+  Menu,
+  X
+} from "lucide-react";
 import Navbar from "../Components/Navbar";
-import Footer from "../components/Footer";
-
-
 
 const Forums = () => {
   const [posts, setPosts] = useState([
@@ -12,71 +22,190 @@ const Forums = () => {
       id: 1, 
       author: "Aryan Sharma", 
       authorRole: "Frontend Developer",
-      avatar: "A",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       content: "How to prepare for tech interviews at FAANG companies? Looking for structured resources and advice from those who've been through the process.", 
       likes: 42, 
       comments: [
-        { author: "Neha Patel", avatar: "N", content: "Practice DSA daily on LeetCode! Focus on medium difficulty problems." },
-        { author: "Raj Mehta", avatar: "R", content: "Check out 'Cracking the Coding Interview' book and AlgoExpert. They were game-changers for me." }
+        { author: "Neha Patel", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b647?w=150&h=150&fit=crop&crop=face", content: "Practice DSA daily on LeetCode! Focus on medium difficulty problems." },
+        { author: "Raj Mehta", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face", content: "Check out 'Cracking the Coding Interview' book and AlgoExpert. They were game-changers for me." }
       ], 
       showComments: false, 
       liked: false,
-      tags: ["Interviews", "Career", "DSA"]
+      tags: ["Interviews", "Career", "DSA"],
+      category: "Career",
+      timestamp: "2 hours ago"
     },
     { 
       id: 2, 
       author: "Neha Patel", 
       authorRole: "Full Stack Developer",
-      avatar: "N",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b647?w=150&h=150&fit=crop&crop=face",
       content: "What are the best resources to learn React in 2025? I've been using Angular but want to switch to React for better job prospects.", 
       likes: 28, 
       comments: [
-        { author: "Aryan Sharma", avatar: "A", content: "React Docs are great after their recent redesign! Very beginner-friendly." },
-        { author: "Maya Singh", avatar: "M", content: "Try Fullstackopen.com - it's free and comprehensive. The React section is excellent." }
+        { author: "Aryan Sharma", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face", content: "React Docs are great after their recent redesign! Very beginner-friendly." },
+        { author: "Maya Singh", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face", content: "Try Fullstackopen.com - it's free and comprehensive. The React section is excellent." }
       ], 
       showComments: false, 
       liked: false,
-      tags: ["React", "Frontend", "Learning"]
+      tags: ["React", "Frontend", "Learning"],
+      category: "Frontend",
+      timestamp: "4 hours ago"
     },
     { 
       id: 3, 
       author: "Vikram Yadav", 
       authorRole: "DevOps Engineer",
-      avatar: "V",
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
       content: "Has anyone implemented CI/CD pipelines with GitHub Actions for a microservices architecture? Looking for best practices and common pitfalls to avoid.", 
       likes: 18, 
       comments: [], 
       showComments: false, 
       liked: false,
-      tags: ["DevOps", "CI/CD", "GitHub"]
+      tags: ["DevOps", "CI/CD", "GitHub"],
+      category: "DevOps",
+      timestamp: "6 hours ago"
+    },
+    { 
+      id: 4, 
+      author: "Priya Gupta", 
+      authorRole: "AI/ML Engineer",
+      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+      content: "Just deployed my first transformer model in production! The journey from research to deployment taught me so much about model optimization and serving infrastructure.", 
+      likes: 35, 
+      comments: [
+        { author: "Tech Lead", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face", content: "Congratulations! What optimization techniques did you use?" }
+      ], 
+      showComments: false, 
+      liked: false,
+      tags: ["AI/ML", "Production", "Success"],
+      category: "AI/ML",
+      timestamp: "1 day ago"
+    },
+    { 
+      id: 5, 
+      author: "Rohit Kumar", 
+      authorRole: "Backend Developer",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      content: "Microservices vs Monolith: When should you make the switch? I'm working on a project that's growing rapidly and considering the architecture change.", 
+      likes: 24, 
+      comments: [
+        { author: "Senior Architect", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face", content: "Start with a monolith, extract services when you have clear boundaries and team structure." }
+      ], 
+      showComments: false, 
+      liked: false,
+      tags: ["Architecture", "Microservices", "Backend"],
+      category: "Backend",
+      timestamp: "1 day ago"
+    },
+    { 
+      id: 6, 
+      author: "Anita Reddy", 
+      authorRole: "System Design Expert",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+      content: "System Design Interview: How to approach designing a distributed cache like Redis? Here's a comprehensive breakdown of the key components and considerations.", 
+      likes: 67, 
+      comments: [
+        { author: "Junior Dev", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face", content: "This is exactly what I needed! Thank you for the detailed explanation." },
+        { author: "Tech Lead", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face", content: "Great breakdown! Would love to see more system design posts." }
+      ], 
+      showComments: false, 
+      liked: false,
+      tags: ["System Design", "Redis", "Distributed Systems"],
+      category: "System Design",
+      timestamp: "2 days ago"
     }
   ]);
   
   const [newPost, setNewPost] = useState("");
   const [newComment, setNewComment] = useState({});
   const [activeCategory, setActiveCategory] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState("General");
+  
+  const containerRef = useRef(null);
+  const heroRef = useRef(null);
+  const postsRef = useRef([]);
 
-  const categories = ["All", "Frontend", "Backend", "DevOps", "Career", "AI/ML"];
+  // Updated categories array to include General
+  const categories = ["All", "Frontend", "Backend", "DevOps", "Career", "AI/ML", "System Design", "General"];
+
+  const trendingTopics = [
+    { icon: Rocket, title: "React 19 Features", count: "156 discussions", category: "Frontend" },
+    { icon: Code, title: "System Design Patterns", count: "89 discussions", category: "System Design" },
+    { icon: Trophy, title: "AI in Web Development", count: "203 discussions", category: "AI/ML" },
+    { icon: Users, title: "Remote Work Best Practices", count: "74 discussions", category: "Career" }
+  ];
+
+  const chiragAvatar = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face";
+
+  // Filter posts based on active category and search term
+  const filteredPosts = posts.filter(post => {
+    const matchesCategory = activeCategory === "All" || post.category === activeCategory;
+    const matchesSearch = searchTerm === "" || 
+      post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    return matchesCategory && matchesSearch;
+  });
+
+  const getCategoryCount = (category) => {
+    if (category === "All") return posts.length;
+    return posts.filter(post => post.category === category).length;
+  };
+
+  // Simulate loading and animations
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Animate elements on scroll
+  useEffect(() => {
+    if (!isLoading) {
+      // Animate hero section
+      if (heroRef.current) {
+        heroRef.current.style.transform = 'translateY(0)';
+        heroRef.current.style.opacity = '1';
+      }
+
+      // Animate posts with stagger
+      postsRef.current.forEach((post, index) => {
+        if (post) {
+          setTimeout(() => {
+            post.style.transform = 'translateY(0)';
+            post.style.opacity = '1';
+          }, index * 150);
+        }
+      });
+    }
+  }, [isLoading]);
 
   const addPost = (e) => {
     e && e.preventDefault();
     
     if (newPost.trim()) {
-      setPosts([
-        { 
-          id: Date.now(),
-          author: "You", 
-          authorRole: "Tech Enthusiast",
-          avatar: "Y",
-          content: newPost, 
-          likes: 0, 
-          comments: [], 
-          showComments: false, 
-          liked: false,
-          tags: ["General"] 
-        },
-        ...posts
-      ]);
+      const newPostObj = { 
+        id: Date.now(),
+        author: "Chirag Dwivedi", 
+        authorRole: "Tech Enthusiast",
+        avatar: chiragAvatar,
+        content: newPost, 
+        likes: 0, 
+        comments: [], 
+        showComments: false, 
+        liked: false,
+        tags: ["General"],
+        category: selectedCategory, // Use selected category instead of hardcoded "General"
+        timestamp: "Just now"
+      };
+      
+      setPosts([newPostObj, ...posts]);
       setNewPost("");
     }
   };
@@ -102,8 +231,8 @@ const Forums = () => {
           return { 
             ...post, 
             comments: [...post.comments, {
-              author: "You",
-              avatar: "Y",
+              author: "Chirag Dwivedi",
+              avatar: chiragAvatar,
               content: newComment[id]
             }], 
             showComments: true 
@@ -116,163 +245,560 @@ const Forums = () => {
     }
   };
 
+  const getInitials = (name) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  };
+
+  if (isLoading) {
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        background: 'var(--gradient-background)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div className="text-center">
+          <div style={{
+            width: '4rem',
+            height: '4rem',
+            border: '4px solid var(--bg-light-purple)',
+            borderTop: '4px solid var(--primary-purple)',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 1rem'
+          }}></div>
+          <p style={{ color: 'var(--primary-purple)', fontWeight: '500' }}>Loading TechTalks...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black p-6">
-      <div className=" mx-auto">
-       <Navbar/>
+    <div style={{ 
+      minHeight: '100vh', 
+      background: 'var(--gradient-background)',
+      color: 'var(--text-primary)'
+    }}>
+      <style>{`
+        :root {
+          /* Primary Colors */
+          --primary-purple: #6b46c1;
+          --secondary-purple: #8b5cf6;
+          --light-purple: #a855f7;
+          
+          /* Accent Colors */
+          --success-green: #10b981;
+          --light-green: #34d399;
+          --warning-orange: #f59e0b;
+          
+          /* Background Colors */
+          --bg-ultra-light: #faf5ff;
+          --bg-light-purple: #f3e8ff;
+          --bg-white: #ffffff;
+          
+          /* Text Colors */
+          --text-primary: #1f2937;
+          --text-secondary: #4b5563;
+          --text-muted: #6b7280;
+          
+          /* Gradients */
+          --gradient-header: linear-gradient(135deg, #6b46c1, #8b5cf6, #a855f7);
+          --gradient-background: linear-gradient(135deg, #faf5ff, #f3e8ff, #e9d5ff);
+          --gradient-success: linear-gradient(135deg, #10b981, #34d399);
+          
+          /* Shadows */
+          --shadow-purple: 0 8px 32px rgba(139, 92, 246, 0.12);
+          --shadow-hover: 0 20px 40px rgba(139, 92, 246, 0.2);
+        }
         
-        <div className="flex flex-col md:flex-row my-4 gap-6">
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
+      
+      <Navbar />
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Hero Section */}
+        <div 
+          ref={heroRef}
+          className="text-center mb-12"
+          style={{ transform: 'translateY(30px)', opacity: '0', transition: 'all 0.8s ease-out' }}
+        >
+          <h1 style={{ 
+            fontSize: '3rem',
+            fontWeight: 'bold',
+            background: 'var(--gradient-header)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            marginBottom: '1rem'
+          }}>
+            TechTalks Forum
+          </h1>
+          <p style={{ 
+            fontSize: '1.25rem',
+            color: 'var(--text-muted)',
+            maxWidth: '48rem',
+            margin: '0 auto'
+          }}>
+            Connect, learn, and grow with fellow developers. Share knowledge, ask questions, and build the future together.
+          </p>
+          
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto mt-8">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2" style={{ color: 'var(--text-muted)' }} />
+              <input
+                type="text"
+                placeholder="Search discussions, topics, or authors..."
+                style={{
+                  width: '100%',
+                  paddingLeft: '3rem',
+                  paddingRight: '1rem',
+                  paddingTop: '1rem',
+                  paddingBottom: '1rem',
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  backdropFilter: 'blur(16px)',
+                  border: '2px solid var(--bg-light-purple)',
+                  borderRadius: '1rem',
+                  fontSize: '1rem',
+                  transition: 'all 0.3s ease',
+                  boxShadow: 'var(--shadow-purple)'
+                }}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={(e) => e.target.style.borderColor = 'var(--primary-purple)'}
+                onBlur={(e) => e.target.style.borderColor = 'var(--bg-light-purple)'}
+              />
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
-          <div className="md:w-1/4">
-            <div className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-lg shadow-xl border border-gray-700 overflow-hidden mb-6">
-              <div className="p-4 bg-gradient-to-r from-[#42b6b5] to-[#3a9e9d] text-white font-bold">
-                Categories
+          <div className="lg:w-1/4 space-y-6">
+            {/* Categories */}
+            <div style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+              backdropFilter: 'blur(16px)',
+              borderRadius: '1rem',
+              boxShadow: 'var(--shadow-purple)',
+              border: '1px solid var(--bg-light-purple)',
+              overflow: 'hidden'
+            }}>
+              <div style={{
+                padding: '1.5rem',
+                background: 'var(--gradient-header)',
+                color: 'white'
+              }}>
+                <h3 className="font-bold text-lg flex items-center">
+                  <Filter className="mr-2" />
+                  Categories
+                </h3>
               </div>
-              <div className="p-2">
+              <div className="p-4 space-y-2">
                 {categories.map(category => (
                   <button
                     key={category}
-                    className={`w-full text-left p-3 rounded-md transition mb-1 ${activeCategory === category ? 'bg-[#42b6b5] text-white' : 'text-gray-300 hover:bg-gray-700'}`}
+                    style={{
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '0.75rem',
+                      borderRadius: '0.75rem',
+                      transition: 'all 0.3s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      backgroundColor: activeCategory === category ? 'var(--primary-purple)' : 'transparent',
+                      color: activeCategory === category ? 'white' : 'var(--text-primary)',
+                      boxShadow: activeCategory === category ? 'var(--shadow-purple)' : 'none'
+                    }}
                     onClick={() => setActiveCategory(category)}
+                    onMouseEnter={(e) => {
+                      if (activeCategory !== category) {
+                        e.target.style.backgroundColor = 'var(--bg-light-purple)';
+                        e.target.style.color = 'var(--primary-purple)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (activeCategory !== category) {
+                        e.target.style.backgroundColor = 'transparent';
+                        e.target.style.color = 'var(--text-primary)';
+                      }
+                    }}
                   >
-                    {category}
+                    <span>{category}</span>
+                    <span style={{
+                      fontSize: '0.75rem',
+                      padding: '0.25rem 0.5rem',
+                      borderRadius: '9999px',
+                      backgroundColor: activeCategory === category ? 'rgba(255, 255, 255, 0.2)' : 'var(--bg-light-purple)',
+                      color: activeCategory === category ? 'white' : 'var(--primary-purple)'
+                    }}>
+                      {getCategoryCount(category)}
+                    </span>
                   </button>
                 ))}
               </div>
             </div>
             
-            <div className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-lg shadow-xl border border-gray-700 overflow-hidden">
-              <div className="p-4 bg-gradient-to-r from-[#42b6b5] to-[#3a9e9d] text-white font-bold">
-                Trending Topics
+            {/* Trending Topics */}
+            <div style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+              backdropFilter: 'blur(16px)',
+              borderRadius: '1rem',
+              boxShadow: 'var(--shadow-purple)',
+              border: '1px solid var(--bg-light-purple)',
+              overflow: 'hidden'
+            }}>
+              <div style={{
+                padding: '1.5rem',
+                background: 'var(--gradient-header)',
+                color: 'white'
+              }}>
+                <h3 className="font-bold text-lg flex items-center">
+                  <Rocket className="mr-2" />
+                  Trending Topics
+                </h3>
               </div>
-              <div className="p-4 space-y-3">
-                <div className="flex items-center gap-2 text-gray-300 hover:text-white transition cursor-pointer">
-                  <FaCode className="text-[#42b6b5]" />
-                  <span>React 19 Features</span>
-                </div>
-                <div className="flex items-center gap-2 text-gray-300 hover:text-white transition cursor-pointer">
-                  <FaBookOpen className="text-[#42b6b5]" />
-                  <span>System Design Basics</span>
-                </div>
-                <div className="flex items-center gap-2 text-gray-300 hover:text-white transition cursor-pointer">
-                  <FaCode className="text-[#42b6b5]" />
-                  <span>AI in Web Development</span>
-                </div>
+              <div className="p-4 space-y-4">
+                {trendingTopics.map((topic, index) => (
+                  <div 
+                    key={index} 
+                    className="flex items-center space-x-3 p-3 rounded-xl cursor-pointer group transition-all"
+                    style={{
+                      transition: 'all 0.3s ease'
+                    }}
+                    onClick={() => setActiveCategory(topic.category)}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--bg-light-purple)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
+                  >
+                    <div style={{
+                      width: '2.5rem',
+                      height: '2.5rem',
+                      background: 'linear-gradient(135deg, var(--bg-light-purple), var(--bg-light-purple))',
+                      borderRadius: '0.5rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'all 0.3s ease'
+                    }}
+                    className="group-hover:from-purple-600 group-hover:to-purple-700">
+                      <topic.icon style={{ color: 'var(--primary-purple)' }} className="group-hover:text-white" />
+                    </div>
+                    <div>
+                      <h4 style={{ fontWeight: '500', color: 'var(--text-primary)' }}>{topic.title}</h4>
+                      <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{topic.count}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
           
-          {/* Main content */}
-          <div className="md:w-3/4">
-            <h1 className="text-3xl font-bold text-white mb-6 border-b-2 border-[#42b6b5] pb-2 inline-block">Tech Discussions</h1>
-            
-            {/* Post creation area */}
-            <div className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-lg shadow-xl mb-8 border border-gray-700 overflow-hidden">
-              <form onSubmit={addPost} className="p-6">
+          {/* Main Content */}
+          <div className="lg:w-3/4">
+            {/* Results Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                  {activeCategory === "All" ? "All Discussions" : `${activeCategory} Discussions`}
+                </h2>
+                <p style={{ color: 'var(--text-muted)' }}>
+                  {filteredPosts.length} {filteredPosts.length === 1 ? 'discussion' : 'discussions'}
+                  {searchTerm && ` matching "${searchTerm}"`}
+                </p>
+              </div>
+              {(activeCategory !== "All" || searchTerm) && (
+                <button
+                  onClick={() => {
+                    setActiveCategory("All");
+                    setSearchTerm("");
+                  }}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    color: 'var(--primary-purple)',
+                    transition: 'all 0.3s ease',
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    borderRadius: '0.5rem'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = 'var(--bg-light-purple)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = 'transparent';
+                  }}
+                >
+                  Clear filters
+                </button>
+              )}
+            </div>
+
+            {/* Post Creation */}
+            <div style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+              backdropFilter: 'blur(16px)',
+              borderRadius: '1rem',
+              boxShadow: 'var(--shadow-purple)',
+              border: '1px solid var(--bg-light-purple)',
+              marginBottom: '2rem',
+              overflow: 'hidden'
+            }}>
+              <div className="p-6">
+                <div className="flex items-center space-x-4 mb-4">
+                  <img 
+                    src={chiragAvatar} 
+                    alt="Chirag Dwivedi" 
+                    className="w-12 h-12 rounded-full object-cover"
+                    style={{ border: '2px solid var(--bg-light-purple)' }}
+                  />
+                  <div>
+                    <h3 style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Chirag Dwivedi</h3>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Share your thoughts with the community</p>
+                  </div>
+                </div>
+                
+                {/* Category Selection */}
+                <div className="mb-4">
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    style={{
+                      padding: '0.5rem 1rem',
+                      backgroundColor: 'var(--bg-light-purple)',
+                      border: '2px solid var(--bg-light-purple)',
+                      borderRadius: '0.5rem',
+                      color: 'var(--primary-purple)',
+                      fontSize: '0.875rem',
+                      fontWeight: '500'
+                    }}
+                  >
+                    {categories.filter(cat => cat !== "All").map(category => (
+                      <option key={category} value={category}>{category}</option>
+                    ))}
+                  </select>
+                </div>
+                
                 <textarea 
-                  className="w-full p-4 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-[#42b6b5] focus:ring-1 focus:ring-[#42b6b5] focus:outline-none transition"
-                  placeholder="Start a technical discussion..." 
-                  rows="3"
+                  style={{
+                    width: '100%',
+                    padding: '1rem',
+                    backgroundColor: 'var(--bg-light-purple)',
+                    border: '2px solid var(--bg-light-purple)',
+                    borderRadius: '0.75rem',
+                    fontSize: '1rem',
+                    transition: 'all 0.3s ease',
+                    resize: 'none',
+                    minHeight: '6rem'
+                  }}
+                  placeholder="What's on your mind? Share a technical question, insight, or discussion topic..." 
+                  rows="4"
                   value={newPost} 
                   onChange={(e) => setNewPost(e.target.value)}
+                  onFocus={(e) => e.target.style.borderColor = 'var(--primary-purple)'}
+                  onBlur={(e) => e.target.style.borderColor = 'var(--bg-light-purple)'}
                 />
-                <div className="flex justify-end">
+                <div className="flex justify-end mt-4">
                   <button 
-                    type="submit"
-                    className="mt-3 px-5 py-2 bg-gradient-to-r from-[#42b6b5] to-[#3a9e9d] text-white font-medium rounded-md hover:opacity-90 transition-all flex items-center shadow-lg"
+                    onClick={addPost}
+                    style={{
+                      padding: '0.75rem 1.5rem',
+                      background: 'var(--gradient-header)',
+                      color: 'white',
+                      fontWeight: '500',
+                      borderRadius: '0.75rem',
+                      border: 'none',
+                      transition: 'all 0.3s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      cursor: 'pointer'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.boxShadow = 'var(--shadow-hover)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.boxShadow = 'none';
+                    }}
                   >
-                    <FaPaperPlane className="mr-2" /> Post
+                    <Send className="w-4 h-4" />
+                    <span>Post Discussion</span>
                   </button>
                 </div>
-              </form>
-            </div>
-            
-            {/* Posts list */}
-            {posts.map(post => (
-              <div key={post.id} className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-lg shadow-xl mb-6 border border-gray-700 overflow-hidden transform transition hover:translate-y-[-2px]">
-                <div className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="h-12 w-12 rounded-full bg-gradient-to-r from-[#42b6b5] to-[#3a9e9d] flex items-center justify-center text-white font-bold text-lg shadow-md">
-                      {post.avatar}
-                    </div>
-                    <div className="ml-3">
-                      <h3 className="font-semibold text-white text-lg">{post.author}</h3>
-                      <p className="text-gray-400 text-sm">{post.authorRole}</p>
-                    </div>
-                  </div>
-                  
-                  <p className="text-white mb-4 text-lg">{post.content}</p>
-                  
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {post.tags.map(tag => (
-                      <span key={tag} className="px-3 py-1 bg-gray-700 text-[#42b6b5] rounded-full text-xs">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  <div className="flex items-center space-x-6 border-t border-gray-700 pt-4">
-                    <button 
-                      type="button"
-                      className={`flex items-center ${post.liked ? "text-[#42b6b5]" : "text-gray-300"} hover:text-[#42b6b5] transition`} 
-                      onClick={() => likePost(post.id)}
-                    >
-                      <FaThumbsUp className="mr-2" /> {post.likes}
-                    </button>
-                    <button 
-                      type="button"
-                      className={`flex items-center ${post.showComments ? "text-[#42b6b5]" : "text-gray-300"} hover:text-[#42b6b5] transition`} 
-                      onClick={() => toggleComments(post.id)}
-                    >
-                      <FaCommentDots className="mr-2" /> {post.comments.length}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Comment Section */}
-                {post.showComments && (
-                  <div className="bg-gray-800 p-5 border-t border-gray-700">
-                    {post.comments.length > 0 ? (
-                      <div className="mb-5 space-y-4">
-                        {post.comments.map((comment, index) => (
-                          <div key={`${post.id}-comment-${index}`} className="flex">
-                            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-[#42b6b5] to-[#3a9e9d] flex items-center justify-center text-white font-bold mr-3 flex-shrink-0 shadow-md">
-                              {comment.avatar}
-                            </div>
-                            <div className="bg-gray-700 p-4 rounded-lg shadow-md text-white text-sm flex-1 relative">
-                              <div className="font-medium mb-1">{comment.author}</div>
-                              {comment.content}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-gray-400 text-sm mb-4">No comments yet. Be the first to comment!</p>
-                    )}
-                    
-                    <form onSubmit={(e) => addComment(post.id, e)} className="flex items-center">
-                    <input 
-                      type="text" 
-                      className="flex-1 h-12 p-4 bg-gray-700 text-white rounded-l-lg border border-gray-600 focus:border-[#42b6b5] focus:ring-1 focus:ring-[#42b6b5] focus:outline-none transition" 
-                      placeholder="Write a comment..."
-                      value={newComment[post.id] || ""}
-                      onChange={(e) => setNewComment({ ...newComment, [post.id]: e.target.value })}
-                    />
-                    <button 
-                      type="submit"
-                      className="h-12 px-4 bg-gradient-to-r from-[#42b6b5] to-[#3a9e9d] text-white font-semibold rounded-r-lg hover:opacity-90 transition-all flex items-center justify-center"
-                     >
-                      <FaPaperPlane />
-                    </button>
-                    </form>
-                  </div>
-                )}
               </div>
-            ))}
+            </div>
+
+            {/* Posts */}
+            <div className="space-y-6">
+              {filteredPosts.map((post, index) => (
+                <div 
+                  key={post.id} 
+                  ref={el => postsRef.current[index] = el}
+                  className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg border border-purple-200 overflow-hidden hover:shadow-xl transition-all duration-300"
+                  style={{ transform: 'translateY(30px)', opacity: '0', transition: 'all 0.6s ease-out' }}
+                >
+                  <div className="p-6">
+                    {/* Post Header */}
+                    <div className="flex items-start space-x-4 mb-4">
+                      <img 
+                        src={post.avatar} 
+                        alt={post.author} 
+                        className="w-12 h-12 rounded-full object-cover border-2 border-purple-200"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                      <div 
+                        className="w-12 h-12 bg-gradient-to-r from-purple-600 to-purple-700 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg"
+                        style={{ display: 'none' }}
+                      >
+                        {getInitials(post.author)}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <h3 className="font-semibold text-gray-800">{post.author}</h3>
+                          <span className="w-2 h-2 bg-purple-400 rounded-full"></span>
+                          <span className="text-sm text-gray-500">{post.authorRole}</span>
+                        </div>
+                        <p className="text-sm text-gray-500 mt-1">{post.timestamp}</p>
+                      </div>
+                    </div>
+                    
+                    {/* Post Content */}
+                    <div className="mb-4">
+                      <p className="text-gray-700 leading-relaxed">{post.content}</p>
+                    </div>
+                    
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {post.tags.map(tag => (
+                        <span key={tag} className="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm font-medium">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    {/* Post Actions */}
+                    <div className="flex items-center space-x-6 pt-4 border-t border-purple-100">
+                      <button 
+                        className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${
+                          post.liked 
+                            ? "bg-purple-100 text-purple-600" 
+                            : "text-gray-500 hover:bg-purple-50 hover:text-purple-600"
+                        }`} 
+                        onClick={() => likePost(post.id)}
+                      >
+                        <ThumbsUp className="w-4 h-4" />
+                        <span>{post.likes}</span>
+                      </button>
+                      <button 
+                        className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${
+                          post.showComments 
+                            ? "bg-purple-100 text-purple-600" 
+                            : "text-gray-500 hover:bg-purple-50 hover:text-purple-600"
+                        }`} 
+                        onClick={() => toggleComments(post.id)}
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        <span>{post.comments.length}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Comments Section */}
+                  {post.showComments && (
+                    <div className="bg-purple-50/50 border-t border-purple-100 p-6">
+                      {post.comments.length > 0 ? (
+                        <div className="space-y-4 mb-6">
+                          {post.comments.map((comment, commentIndex) => (
+                            <div key={commentIndex} className="flex space-x-3">
+                              <img 
+                                src={comment.avatar} 
+                                alt={comment.author} 
+                                className="w-10 h-10 rounded-full object-cover border-2 border-purple-200"
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.nextSibling.style.display = 'flex';
+                                }}
+                              />
+                              <div 
+                                className="w-10 h-10 bg-gradient-to-r from-purple-600 to-purple-700 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md"
+                                style={{ display: 'none' }}
+                              >
+                                {getInitials(comment.author)}
+                              </div>
+                              <div className="flex-1 bg-white rounded-xl p-4 shadow-sm">
+                                <div className="font-medium text-gray-800 mb-1">{comment.author}</div>
+                                <p className="text-gray-600">{comment.content}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500 text-center py-4">No comments yet. Start the conversation!</p>
+                      )}
+                      
+                      {/* Add Comment */}
+                      <div className="flex space-x-3">
+                        <img 
+                          src={chiragAvatar} 
+                          alt="Chirag Dwivedi" 
+                          className="w-10 h-10 rounded-full object-cover border-2 border-purple-200"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
+                        />
+                        <div 
+                          className="w-10 h-10 bg-gradient-to-r from-purple-600 to-purple-700 rounded-full flex items-center justify-center text-white font-bold text-sm"
+                          style={{ display: 'none' }}
+                        >
+                          CD
+                        </div>
+                        <div className="flex-1 flex space-x-2">
+                          <input 
+                            type="text" 
+                            className="flex-1 px-4 py-3 bg-white border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors" 
+                            placeholder="Write a thoughtful comment..."
+                            value={newComment[post.id] || ""}
+                            onChange={(e) => setNewComment({ ...newComment, [post.id]: e.target.value })}
+                            onKeyPress={(e) => e.key === 'Enter' && addComment(post.id, e)}
+                          />
+                          <button 
+                            onClick={(e) => addComment(post.id, e)}
+                            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl hover:shadow-lg transition-all flex items-center justify-center"
+                          >
+                            <Send className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+              
+              {filteredPosts.length === 0 && (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Search className="w-8 h-8 text-purple-400" />
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-800 mb-2">No discussions found</h3>
+                  <p className="text-gray-500">
+                    {searchTerm ? `No results for "${searchTerm}"` : `No discussions in ${activeCategory} category`}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
-      <Footer/>
     </div>
   );
 };

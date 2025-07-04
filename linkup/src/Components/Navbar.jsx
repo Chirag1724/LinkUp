@@ -77,23 +77,12 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
+    // You can add any logout logic here (clear localStorage, etc.)
     navigate("/");
-    
-    // Animate navbar out
-    if (navRef.current) {
-      navRef.current.style.transition = 'all 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53)';
-      navRef.current.style.transform = 'translateY(-100px)';
-      navRef.current.style.opacity = '0';
-      
-      setTimeout(() => {
-        navRef.current.style.transform = 'translateY(0)';
-        navRef.current.style.opacity = '1';
-      }, 400);
-    }
   };
 
   const handleNavClick = (path) => {
-    console.log(`Navigate to: ${path}`);
+    navigate(path);
   };
 
   const navItems = [
@@ -129,7 +118,7 @@ const Navbar = () => {
           <div className="flex items-center justify-between h-16 lg:h-18">
             
             {/* Logo Section */}
-            <div className="flex items-center group cursor-pointer" onClick={() => handleNavClick("/")}>
+            <div className="flex items-center group cursor-pointer" onClick={() => handleNavClick("/person")}>
               <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
                     <img src="./logo.jpg" alt="My Logo" className="w-8 h-8 object-contain"/>
                   </div>

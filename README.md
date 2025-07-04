@@ -1,3 +1,7 @@
+# LinkUp
+
+A modern networking platform connecting students, professionals, and alumni through meaningful interactions.
+
 ## Overview
 
 LinkUp is a professional networking platform designed to bridge the gap between students and industry professionals. The platform facilitates connections through alumni networks, tech talks, and curated events, creating opportunities for mentorship and career growth.
@@ -35,9 +39,10 @@ cd linkup
 npm install
 
 # Start development server
-npm start
+npm run dev
 ```
 
+The application will be available at `http://localhost:3000`
 
 ## Project Structure
 
